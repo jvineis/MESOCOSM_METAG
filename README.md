@@ -125,10 +125,13 @@ on-2022-06-17_Read_4_passed_filter.fastq --index 2101__Merge-sample-metagenomics
     anvi-estimate-genome-completeness -c x_FULL-megahit-assemblyk3959/final.contigs.db -p FULL_megahit_assemblyk3959-MERGE/PROFILE.db -C CONCOCT20 -o x_full-concoct_output-20bins/x_concoct20-completion-estimates.txt
     anvi-estimate-scg-taxonomy -c x_FULL-megahit-assemblyk3959/final.contigs.db -p FULL_megahit_assemblyk3959-MERGE/PROFILE.db -C CONCOCT20 -o x_full-concoct_output-20bins/x_concoct20-taxonomy-estimates.txt
 
+### Now you can summarize the CONCOCT Bins and decide which ones you want to refine and go from there using a manual approach to generate a clean MAG collection.
+
+    anvi-summarize -c x_FULL-megahit-assemblyk3959/final.contigs.db -p FULL_megahit_assemblyk3959-MERGE/PROFILE.db -C CONCOCT20 -o FULL_megahit_assemblyk3959-MERGE-CONCOCT20-SUMMARY
+
+#### Fire up a vis machine and run anvi refine on all of your metabins. This is how to get the refinement session started. Once you have finished binning, you can run the sammarize script again. 
+
+    anvi-refine -c x_FULL-megahit-assemblyk3959/final.contigs.db -p FULL_megahit_assemblyk3959-MERGE/PROFILE.db -C CONCOCT20 -b bin_1
 
 
-#anvi-get-sequences-for-hmm-hits -c x_FULL-megahit-assemblyk3959/final.contigs.db -p FULL_megahit_assemblyk3959-MERGE/PROFILE.db -B x_euk-bins-from-concoct20.txt --get-aa-sequences --hmm-sources HMM_RNA_a,HMM_RNA_b -C CONCOCT20 -o x_full-conc
-oct_output-20bins/x_euk-bins-from-concoct20-HMM_RNAaandb.faa
 
-#anvi-summarize -c x_FULL-megahit-assemblyk3959/final.contigs.db -p FULL_megahit_assemblyk3959-MERGE/PROFILE.db -C CONCOCT20 -o FULL_megahit_assemblyk3959-MERGE-CONCOCT20-SUMMARY
-    
