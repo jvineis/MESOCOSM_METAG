@@ -1,4 +1,4 @@
-# MESOCOSM_METAG
+# MAG Reconstruction and annotation from experimental upwelling mesocosms
 The steps and scripts that I used to analyze the MOSS Landing metagenomic data including both prokaryotic and eukaryotic lineages -- functions abundance and beyond
 
 The data for this project were sequenced at the Princeton Sequencing core facility as 65bp PE fragments. A summary of the number of reads generated per sample are contained in this git "summary of reads per sample"
