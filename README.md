@@ -109,12 +109,21 @@ on-2022-06-17_Read_4_passed_filter.fastq --index 2101__Merge-sample-metagenomics
     #merge_cutup_clustering.py x_full-concoct_output-20bins/clustering_gt1000.csv > x_full-concoct_output-20bins/clustering_merged.csv
     extract_fasta_bins.py /scratch/gpfs/WARD/JOE/MOSS_BLOOM/METAGENOMICS_20220617/DEMULTIPLEX/x_FULL-megahit-assemblyk3959/final.contigs.simplifiednames.fa x_full-concoct_output-20bins/clustering_merged.csv --output_path x_full-concoct_output-20bins/fasta_bins
 
-#### ~~ I ran the commands below directly on the head node, because I could not stand waiting for the slow scheduler! Each of these jobs took less than 1 min.
+#### Import the bins into the anvio contigs database. A file called CONCOCT-bins-for-anvio.txt is required for this step. I created this script using a bunch of manual unix babyscript. I know you can do this, even if takes a bit of time. The file just needs to have two columns and look like the example file in this git. "CONCOCT-bins-for-anvio.txt".
+
+    #!/bin/bash
+
+    #SBATCH --nodes=1
+    #SBATCH --tasks-per-node=20
+    #SBATCH --time=00:10:00
+    #SBATCH --mem=100Gb
+
+    anvi-import-collection /scratch/gpfs/WARD/JOE/MOSS_BLOOM/METAGENOMICS_20220617/DEMULTIPLEX/x_full-concoct_output/CONCOCT-bins-for-anvio.txt -c x_FULL-megahit-assemblyk3959/final.contigs.db -p FULL_megahit_assemblyk3959-MERGE/PROFILE.db -C CONCOCT --contigs-mode
+
+#### I ran the commands below directly on the head node, because I could not stand waiting for the slow scheduler! Each of these jobs took less than 1 min.
     anvi-get-sequences-for-hmm-hits -c x_FULL-megahit-assemblyk3959/final.contigs.db -p FULL_megahit_assemblyk3959-MERGE/PROFILE.db -B x_euk-bins-from-concoct20.txt --get-aa-sequences --hmm-sources HMM_RNA_a -C CONCOCT20 -o x_full-concoct_output-20bins/x_euk-bins-from-concoct20-HMM_RNAa.faa
-
-    #anvi-estimate-genome-completeness -c x_FULL-megahit-assemblyk3959/final.contigs.db -p FULL_megahit_assemblyk3959-MERGE/PROFILE.db -C CONCOCT20 -o x_full-concoct_output-20bins/x_concoct20-completion-estimates.txt
-
-    #anvi-estimate-scg-taxonomy -c x_FULL-megahit-assemblyk3959/final.contigs.db -p FULL_megahit_assemblyk3959-MERGE/PROFILE.db -C CONCOCT20 -o x_full-concoct_output-20bins/x_concoct20-taxonomy-estimates.txt
+    anvi-estimate-genome-completeness -c x_FULL-megahit-assemblyk3959/final.contigs.db -p FULL_megahit_assemblyk3959-MERGE/PROFILE.db -C CONCOCT20 -o x_full-concoct_output-20bins/x_concoct20-completion-estimates.txt
+    anvi-estimate-scg-taxonomy -c x_FULL-megahit-assemblyk3959/final.contigs.db -p FULL_megahit_assemblyk3959-MERGE/PROFILE.db -C CONCOCT20 -o x_full-concoct_output-20bins/x_concoct20-taxonomy-estimates.txt
 
 
 
