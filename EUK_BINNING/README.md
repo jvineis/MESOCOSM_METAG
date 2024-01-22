@@ -140,7 +140,7 @@ on-2022-06-17_Read_4_passed_filter.fastq --index 2101__Merge-sample-metagenomics
 
     ls .fa | sed 's/\.fa//g' > x_bin_names.txt
 
-##### 3. Build a contigs database and run the HMM for RNApolA that is found in this git repository. You will need to upload all HMM files ( and place them in a single directory
+##### 3. Use the HMM direcotry for RNApolA that is found in this git repository. The TAXONOMY_RNApolA.fa and RNApolA_proteins_TOM.dmnd will also be required for this step. 
 
     #!/bin/bash
     #SBATCH --nodes=1
