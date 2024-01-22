@@ -1,0 +1,2 @@
+gene	accession	hmmsource
+RNAP-a_all	homemade	myself
