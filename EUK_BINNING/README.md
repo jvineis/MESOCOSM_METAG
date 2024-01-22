@@ -147,13 +147,13 @@ on-2022-06-17_Read_4_passed_filter.fastq --index 2101__Merge-sample-metagenomics
     #SBATCH --tasks-per-node=1
     #SBATCH --time=00:30:00
     #SBATCH --mem=10Gb
-    #SBATCH --array=1-13
+    #SBATCH --array=1-NUMBER OF MAGS IN x_bin_names.txt
     
     i=$(sed -n "$SLURM_ARRAY_TASK_ID"p x_bin_names.txt)
     
     anvi-gen-contigs-database -f ${i}.fa -o ${i}-contigs.db -T 30
-    anvi-run-hmms -c ${i}-contigs.db -H /scratch/gpfs/WARD/JOE/ANVIO-HMM-DBs/HMMs_RNApol_A_and_B/HMM_RNA_a -T 30
-    anvi-get-sequences-for-hmm-hits -c bin_by_bin/${i}/${i}-contigs.db --get-aa-sequences --hmm-sources HMM_RNA_a -o ${i}-RNApolA_genes.faa
-    diamond blastp -q ${i}-RNApolA_genes.faa --db /scratch/gpfs/WARD/JOE/DBs/00_DIAMOND_RNApolA/RNApolA_proteins_TOM.dmnd --threads 30 --outfmt 6 --max-target-seqs 1 --out ${i}-RNAa-HITS
-    python ~/scripts/merge-diamond-and-taxonomy-with-header.py --diamond ${i}-RNAa-HITS --taxonomy /scratch/gpfs/WARD/JOE/DBs/00_DIAMOND_RNApolA/TAXONOMY_RNApolA.fa --out ${i}-RNAa-HITS-with-TAX
+    anvi-run-hmms -c ${i}-contigs.db -H HMM_RNA_a -T 30
+    anvi-get-sequences-for-hmm-hits -c ${i}-contigs.db --get-aa-sequences --hmm-sources HMM_RNA_a -o ${i}-RNApolA_genes.faa
+    diamond blastp -q ${i}-RNApolA_genes.faa --db RNApolA_proteins_TOM.dmnd --threads 30 --outfmt 6 --max-target-seqs 1 --out ${i}-RNAa-HITS
+    python merge-diamond-and-taxonomy-with-header.py --diamond ${i}-RNAa-HITS --taxonomy TAXONOMY_RNApolA.fa --out ${i}-RNAa-HITS-with-TAX
 
