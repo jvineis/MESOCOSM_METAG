@@ -132,3 +132,28 @@ on-2022-06-17_Read_4_passed_filter.fastq --index 2101__Merge-sample-metagenomics
 #### Fire up a vis machine and run anvi refine on all of your metabins. This is how to get the refinement session started. Once you have finished binning, you can run the sammarize script again. 
 
     anvi-refine -c x_FULL-megahit-assemblyk3959/final.contigs.db -p FULL_megahit_assemblyk3959-MERGE/PROFILE.db -C CONCOCT20 -b bin_1
+
+#### I bet you are dying to know what the taxonomy of your MAGs are! Well, you can use the RNApolA gene to find out. First build and anvio db for each MAG, then run the HMM, export the hmm hit, the use diamond to search the reference database and finally match the hit to the taxonomic classification. Below are the steps to do this.
+
+##### 1. Place all of your Eukaryotic MAGs into a single directory
+##### 2. make a list of all the Eukaryotic fasat files
+
+    ls .fa | sed 's/\.fa//g' > x_bin_names.txt
+
+##### 3. Build a contigs database and run the HMM for RNApolA that is found in this git repository. You will need to upload all HMM files ( and place them in a single directory
+
+    #!/bin/bash
+    #SBATCH --nodes=1
+    #SBATCH --tasks-per-node=1
+    #SBATCH --time=00:30:00
+    #SBATCH --mem=10Gb
+    #SBATCH --array=1-13
+    
+    i=$(sed -n "$SLURM_ARRAY_TASK_ID"p x_bin_names.txt)
+    
+    anvi-gen-contigs-database -f ${i}.fa -o ${i}-contigs.db -T 30
+    anvi-run-hmms -c ${i}-contigs.db -H /scratch/gpfs/WARD/JOE/ANVIO-HMM-DBs/HMMs_RNApol_A_and_B/HMM_RNA_a -T 30
+    anvi-get-sequences-for-hmm-hits -c bin_by_bin/${i}/${i}-contigs.db --get-aa-sequences --hmm-sources HMM_RNA_a -o ${i}-RNApolA_genes.faa
+    diamond blastp -q ${i}-RNApolA_genes.faa --db /scratch/gpfs/WARD/JOE/DBs/00_DIAMOND_RNApolA/RNApolA_proteins_TOM.dmnd --threads 30 --outfmt 6 --max-target-seqs 1 --out ${i}-RNAa-HITS
+    python ~/scripts/merge-diamond-and-taxonomy-with-header.py --diamond ${i}-RNAa-HITS --taxonomy /scratch/gpfs/WARD/JOE/DBs/00_DIAMOND_RNApolA/TAXONOMY_RNApolA.fa --out ${i}-RNAa-HITS-with-TAX
+
